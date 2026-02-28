@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bloxyman</title>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial;
+        background: #f2f2f2;
+      }
+
+      .navbar {
+        background: #333;
+        padding: 15px;
+      }
+
+      .navbar a {
+        color: white;
+        margin-right: 20px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .home-layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+
+      .home-left {
+        width: 380px;
+        padding-left: 20px;
+      }
+
+      .left-box,
+      .center-box,
+      .download-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+      }
+
+      .left-box {
+        width: 300px;
+        margin-top: 80px;
+      }
+
+      .players-box {
+        width: 300px;
+        margin-top: 20px;
+        padding: 15px;
+        background: #1e3a8a;
+        color: #93c5fd;
+      }
+
+      .home-center {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: 80px;
+        padding-left: 60px;
+      }
+
+      .home-hero {
+        max-width: 600px;
+      }
+
+      .home-hero h1 {
+        font-size: 42px;
+        margin-bottom: 15px;
+      }
+
+      .home-hero p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #444;
+      }
+
+      .center-box {
+        width: 350px;
+        margin: 80px auto;
+        text-align: center;
+      }
+
+      .download-box {
+        width: 400px;
+        margin: 80px auto;
+        text-align: center;
+      }
+
+      input {
+        width: 90%;
+        padding: 8px;
+        margin: 5px 0;
+      }
+
+      button {
+        padding: 8px 15px;
+        margin: 5px;
+        cursor: pointer;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background: #3b82f6;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .btn:hover {
+        background: #2563eb;
+      }
+
+      .stickman {
+        width: 150px;
+        height: 250px;
+        margin: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar">
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('download')">Download</a>
+      <a onclick="showPage('character')">Character Changer</a>
+      <a onclick="showPage('settings')">Settings</a>
+      <a onclick="logout()" id="logoutBtn" class="hidden">Logout</a>
+    </div>
+
+    <!-- HOME -->
+    <div id="home" class="page">
+      <div class="home-layout">
+        <div class="home-left">
+          <div class="left-box">
+            <h3>Login</h3>
+            <input id="loginUser" placeholder="Username" />
+            <input
+              type="password"
+              id="loginPass"
+              placeholder="Password"
+              autocomplete="off"
+            />
+            <button onclick="login()">Log In</button>
+            <button onclick="showPage('signup')">Sign Up</button>
+            <p id="loginMsg" style="color: red"></p>
+          </div>
+
+          <div class="players-box">
+            <div style="display: flex; justify-content: space-between">
+              <h3>Players</h3>
+              <span
+                onclick="
+                  showPage('allPlayers');
+                  loadAllPlayers();
+                "
+                style="cursor: pointer; text-decoration: underline"
+              >
+                See All
+              </span>
+            </div>
+            <div id="previewPlayers">Loading...</div>
+          </div>
+        </div>
+
+        <div class="home-center">
+          <div class="home-hero">
+            <h1>Bloxyman Studio</h1>
+
+            <p>
+              Bloxyman Studio is a creative sandbox game development platform
+              that allows you to build interactive block-based worlds powered by
+              physics and scripting systems.
+            </p>
+
+            <p>
+              Create structures, experiment with gravity and collision,
+              customize your character, and bring your ideas to life.
+            </p>
+
+            <p><b>Build freely. Script creatively. Play endlessly.</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIGNUP -->
+    <div id="signup" class="page hidden">
+      <div class="center-box">
+        <h3>Create Account</h3>
+        <input id="newUser" placeholder="Username" />
+        <input
+          type="password"
+          id="newPass"
+          placeholder="Password (min 8)"
+          autocomplete="off"
+        />
+        <br />
+        <label><input type="radio" name="gender" value="Male" /> Male</label>
+        <label
+          ><input type="radio" name="gender" value="Female" /> Female</label
+        >
+        <br />
+        <button onclick="register()">Sign Up</button>
+        <button onclick="showPage('home')">Cancel</button>
+        <p id="signupMsg" style="color: red"></p>
+      </div>
+    </div>
+
+    <!-- DOWNLOAD -->
+    <div id="download" class="page hidden">
+      <div class="download-box">
+        <h1>Bloxyman Studio</h1>
+        <p>Version 1.0 - Windows 64-bit</p>
+        <a class="btn" href="Bloxyman_studio.zip" download> Download Now </a>
+      </div>
+    </div>
+
+    <!-- CHARACTER CHANGER -->
+    <div id="character" class="page hidden">
+      <div class="center-box">
+        <h3>Character Changer</h3>
+        <p id="genderText"></p>
+        <div id="charArea"></div>
+        <input type="color" id="colorPicker" />
+        <br />
+        <button onclick="changeColor()">Change Skin Color</button>
+        <p id="charMsg"></p>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings" class="page hidden">
+      <div class="center-box">
+        <h3>Settings</h3>
+        <p id="settingsUser"></p>
+        <button onclick="deleteAccount()" style="background: red; color: white">
+          Delete Account
+        </button>
+        <br /><br />
+        <button onclick="showPage('home')">Back</button>
+      </div>
+    </div>
+
+    <!-- ALL PLAYERS -->
+    <div id="allPlayers" class="page hidden">
+      <div class="center-box">
+        <h3>All Players</h3>
+        <div id="allPlayersList">Loading...</div>
+        <br />
+        <button onclick="showPage('home')">Back</button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        get,
+        child,
+        remove,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+      async function hashPassword(password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hash = await crypto.subtle.digest("SHA-256", data);
+        return Array.from(new Uint8Array(hash))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+      }
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA0vVFaZNdhGk2_eSTYQzSJaiMZi5N_iUc",
+        authDomain: "bloxyman-dubies.firebaseapp.com",
+        databaseURL:
+          "https://bloxyman-dubies-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "bloxyman-dubies",
+        storageBucket: "bloxyman-dubies.firebasestorage.app",
+        messagingSenderId: "408169931048",
+        appId: "1:408169931048:web:4fca7b5d8408eb29a2301d",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      let currentUser = null;
+
+      window.showPage = function (page) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.add("hidden"));
+        document.getElementById(page).classList.remove("hidden");
+
+        if (page === "character") loadCharacter();
+        if (page === "settings" && currentUser)
+          settingsUser.innerText = "Logged in as: " + currentUser;
+      };
+
+      window.register = async function () {
+        const username = newUser.value.trim();
+        const password = newPass.value;
+        const gender = document.querySelector('input[name="gender"]:checked');
+
+        if (!username || !password || !gender) return;
+        if (password.length < 8) return;
+
+        const hashed = await hashPassword(password);
+        const snapshot = await get(child(ref(db), "users/" + username));
+
+        if (snapshot.exists()) return;
+
+        await set(ref(db, "users/" + username), {
+          password: hashed,
+          gender: gender.value,
+          skin: "#ffcc99",
+        });
+
+        signupMsg.style.color = "green";
+        signupMsg.innerText = "Account created!";
+      };
+
+      window.login = async function () {
+        const username = loginUser.value.trim();
+        const password = loginPass.value;
+
+        const hashed = await hashPassword(password);
+        const snapshot = await get(child(ref(db), "users/" + username));
+
+        if (!snapshot.exists()) return;
+
+        const data = snapshot.val();
+
+        if (data.password === hashed) {
+          currentUser = username;
+          logoutBtn.classList.remove("hidden");
+          loginMsg.style.color = "green";
+          loginMsg.innerText = "Login successful!";
+          loadPlayers();
+        }
+      };
+
+      window.logout = function () {
+        currentUser = null;
+        logoutBtn.classList.add("hidden");
+      };
+
+      window.deleteAccount = function () {
+        if (!currentUser) return;
+        remove(ref(db, "users/" + currentUser));
+        logout();
+      };
+
+      function loadPlayers() {
+        get(ref(db, "users")).then((snapshot) => {
+          let html = "";
+          if (snapshot.exists()) {
+            let count = 0;
+            snapshot.forEach((child) => {
+              if (count < 3) {
+                html += `<p>👤 ${child.key}</p>`;
+                count++;
+              }
+            });
+          }
+          previewPlayers.innerHTML = html || "No players yet.";
+        });
+      }
+
+      function loadAllPlayers() {
+        get(ref(db, "users")).then((snapshot) => {
+          let html = "";
+          if (snapshot.exists()) {
+            snapshot.forEach((child) => {
+              const data = child.val();
+              html += `<p>👤 ${child.key} (${data.gender})</p>`;
+            });
+          }
+          allPlayersList.innerHTML = html || "No players yet.";
+        });
+      }
+
+      function loadCharacter() {
+        if (!currentUser) return;
+
+        get(child(ref(db), "users/" + currentUser)).then((snapshot) => {
+          const data = snapshot.val();
+          genderText.innerText = "Gender: " + data.gender;
+
+          charArea.innerHTML = `
+      <svg class="stickman" viewBox="0 0 200 300">
+        <circle cx="100" cy="60" r="30" fill="${data.skin}"/>
+        <line x1="100" y1="90" x2="100" y2="180" stroke="${data.skin}" stroke-width="5"/>
+        <line x1="100" y1="110" x2="60" y2="150" stroke="${data.skin}" stroke-width="5"/>
+        <line x1="100" y1="110" x2="140" y2="150" stroke="${data.skin}" stroke-width="5"/>
+        <line x1="100" y1="180" x2="70" y2="240" stroke="${data.skin}" stroke-width="5"/>
+        <line x1="100" y1="180" x2="130" y2="240" stroke="${data.skin}" stroke-width="5"/>
+      </svg>
+    `;
+        });
+      }
+
+      window.changeColor = function () {
+        const color = colorPicker.value;
+        set(ref(db, "users/" + currentUser + "/skin"), color).then(() => {
+          loadCharacter();
+        });
+      };
+
+      loadPlayers();
+    </script>
+  </body>
+</html>
